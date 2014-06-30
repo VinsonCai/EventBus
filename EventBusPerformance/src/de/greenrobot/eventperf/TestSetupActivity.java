@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -15,17 +16,22 @@ import de.greenrobot.eventperf.testsubject.PerfTestOtto;
 import de.greenrobot.eventperf.testsubject.PerfTestEventBus;
 
 public class TestSetupActivity extends Activity {
+	private static final String TAG = "TestSetupActivity";
 
     @SuppressWarnings("rawtypes")
-    static final Class[] TEST_CLASSES_EVENTBUS = { PerfTestEventBus.Post.class,//
-            PerfTestEventBus.RegisterOneByOne.class,//
-            PerfTestEventBus.RegisterAll.class, //
-            PerfTestEventBus.RegisterFirstTime.class };
+	static final Class[] TEST_CLASSES_EVENTBUS = { 
+    	PerfTestEventBus.Post.class,//
+		PerfTestEventBus.RegisterOneByOne.class,//
+		PerfTestEventBus.RegisterAll.class, //
+		PerfTestEventBus.RegisterFirstTime.class 
+	};
 
-    static final Class[] TEST_CLASSES_OTTO = { PerfTestOtto.Post.class,//
-            PerfTestOtto.RegisterOneByOne.class,//
-            PerfTestOtto.RegisterAll.class, //
-            PerfTestOtto.RegisterFirstTime.class };
+	static final Class[] TEST_CLASSES_OTTO = { 
+		PerfTestOtto.Post.class,//
+		PerfTestOtto.RegisterOneByOne.class,//
+		PerfTestOtto.RegisterAll.class, //
+		PerfTestOtto.RegisterFirstTime.class 
+	};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,7 @@ public class TestSetupActivity extends Activity {
 
         Spinner spinnerTestToRun = (Spinner) findViewById(R.id.spinnerTestToRun);
         int testPos = spinnerTestToRun.getSelectedItemPosition();
+        Log.v(TAG, "testPos=" + testPos);
         params.setTestNumber(testPos + 1);
         ArrayList<Class<? extends Test>> testClasses = initTestClasses(testPos);
         params.setTestClasses(testClasses);
@@ -88,9 +95,11 @@ public class TestSetupActivity extends Activity {
         final CheckBox checkBoxLocalBroadcast = (CheckBox) findViewById(R.id.checkBoxLocalBroadcast);
         if (checkBoxEventBus.isChecked()) {
             testClasses.add(TEST_CLASSES_EVENTBUS[testPos]);
+            Log.v(TAG, "event bus checkbox is checked, test class add:" + TEST_CLASSES_EVENTBUS[testPos].getSimpleName());
         }
         if (checkBoxOtto.isChecked()) {
             testClasses.add(TEST_CLASSES_OTTO[testPos]);
+            Log.v(TAG, "otto checkbox is checked, test class add:" + TEST_CLASSES_OTTO[testPos].getSimpleName());
         }
         if (checkBoxBroadcast.isChecked()) {
         }

@@ -3,4 +3,23 @@ subscriberMethodFinder.findSubscriberMethods(subscriber.getClass(),methodName); 
 先把监听器注册好，然后在调用post(Event)时进行回调。
 
 
+在subscriberMethodFinder.findSubscriberMethods(subscriber.getClass(),methodName);里面的逻辑：
+1. 根据类名和方法名组成一个key
+2. 然后根据这个key在methodCache里面找，如果找到就直接返回了，不然就往下走
+3. 循环地在当前类到父类里面去找匹配的方法名
+	3.1  如果当前类是以java. javax. android.开始的，就直接忽略了，不然会影响性能
+	3.2 对于当前类的所有方法
+		3.2.1 如果类是以methodName开始，忽略掉所有不以public开始的，抽象或静态的方法
+			3.2.1.1 只接受一个参数的方法
+			3.2.1.2  如果该方法名与methodName相等，就用ThreadMode.PostThread方法
+			3.2.1.3 如果该方法名由methodName和MainThread组成，则是ThreadMode.MainThread
+			3.2.1.4 如果该方法名由methodName和BackgroundThread组成，则是ThreadMode.BackgroundThread
+			3.2.1.5 如果该方法名由methodName和Async组成，则是ThreadMode.Async
+			3.2.1.6 然后把方法名和参数类型作为一个methodKey，然后把它加到eventTypesFound里面，如果可以添加成功，就表示之前未添加过，可以作为一个SubscriberMethod
+
+
+
+
+
+
 
